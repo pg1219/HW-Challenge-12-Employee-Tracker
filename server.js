@@ -68,6 +68,7 @@ function promptUser() {
 function viewAllDepartments() {
   db.query("SELECT * FROM departments", function (err, results) {
     console.table(results);
+    promptUser()
   });
 }
 
@@ -75,6 +76,7 @@ function viewAllRoles() {
     // join function for dept_id
   db.query("SELECT * FROM roles", function (err, results) {
     console.table(results);
+    promptUser()
   });
 }
 
@@ -82,8 +84,38 @@ function viewAllEmployees() {
     // join function for dept_id
   db.query("SELECT * FROM employees", function (err, results) {
     console.table(results);
+    promptUser()
   });
 }
+
+function addDepartment() {
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "dept_name",
+            message: "What is the name of the department",
+        },
+        {  
+            type: "input",
+            name: "id",
+            message: "Please add new department ID",
+
+        }
+        ]).then((data) =>{
+            console.log(data)
+
+            db.query(
+                "INSERT INTO departments (id, dept_name) VALUES (?, ?)",
+                [data.id, data.dept_name],
+                function (err, results) {
+                    console.table(results);
+                    promptUser()
+                }
+                );
+            })
+  }
+
+
 
 function addRole() {
   db.query("SELECT * FROM departments", function (err, results) {
@@ -126,3 +158,59 @@ function addRole() {
             })
   });
 }
+
+function addEmployee() {
+  db.query("SELECT first_name, last_name FROM employees", function (err, results) {
+    console.table(results);
+    const empChoices = results.map(({first_name, last_name, manager_id}) => ({
+        name: `${first_name} ${last_name}`,
+        value: manager_id
+    }))
+    console.log(empChoices)
+
+  db.query("SELECT title FROM roles", function (err, results) {
+    console.table(results);
+    const roleChoices = results.map(({title}) => ({
+        name: title
+    }))
+    console.log(roleChoices)
+
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "first name",
+            message: "What is the first name of the employee",
+        },
+        {  
+            type: "input",
+            name: "last name",
+            message: "What is the last name of the employee",
+
+        },
+        {  
+            type: "list",
+            name: "role",
+            message: "What is the role of the employee",
+            choices: roleChoices
+
+        },
+        {  
+            type: "list",
+            name: "manager",
+            message: "Who is the manager of the new employee",
+            choices: empChoices
+        }
+        ]).then((data) =>{
+            console.log(data)
+
+            db.query(
+                "INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
+                [data.first_name, data.last_name, data.title, data.manager_id],
+                function (err, results) {
+                    console.table(results);
+                    promptUser()
+                }
+                );
+            })
+  });
+})}
