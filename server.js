@@ -160,11 +160,11 @@ function addRole() {
 }
 
 function addEmployee() {
-  db.query("SELECT first_name, last_name FROM employees", function (err, results) {
+  db.query("SELECT first_name, last_name, id FROM employees", function (err, results) {
     console.table(results);
-    const empChoices = results.map(({first_name, last_name, manager_id}) => ({
+    const empChoices = results.map(({first_name, last_name, id}) => ({
         name: `${first_name} ${last_name}`,
-        value: manager_id
+        value: id
     }))
     console.log(empChoices)
 
@@ -204,8 +204,8 @@ function addEmployee() {
             console.log(data)
 
             db.query(
-                "INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
-                [data.first_name, data.last_name, data.title, data.manager_id],
+                "INSERT INTO employees (first_name, last_name, title, id) VALUES (?, ?, ?, ?)",
+                [data.first_name, data.last_name, data.title, data.id],
                 function (err, results) {
                     console.table(results);
                     promptUser()
