@@ -2,29 +2,31 @@
 
 ## Description
 
-Our objective this assignment was to add code to make the note taker code given to us functional.
+Create a command-line application that allows user to view and manage the departments, roles, and employees in a company.
 
-Main Objectives: 
+## Main Objectives
 
-- When I open the Note Taker, I am presented with a landing page with a link to a notes page
-- When I click on the link to the notes page, I am presented with a page with existing notes listed in the left-hand column, plus empty fields to enter a new note title and the    note’s text in the right-hand column
-- When I enter a new note title and the note’s text, a Save icon appears in the navigation at the top of the page
-- When I click on the Save icon, the new note I have entered is saved and appears in the left-hand column with the other existing notes
-- When I click on an existing note in the list in the left-hand column, that note appears in the right-hand column
-- When I click on the Write icon in the navigation at the top of the page, I am presented with empty fields to enter a new note title and the note’s text in the right-hand column
+- When I start the application, I am presented with the following options: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
+- When I choose to view all departments, I am presented with a formatted table showing department names and department ids
+- When I choose to view all roles, I am presented with the job title, role id, the department that role belongs to, and the salary for that role
+- When I choose to view all employees, I am presented with a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
+- When I choose to add a department, I am prompted to enter the name of the department and that department is added to the database
+- When I choose to add a role, I am prompted to enter the name, salary, and department for the role and that role is added to the database
+- When I choose to add an employee, I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
+- When I choose to update an employee role, I am prompted to select an employee to update and their new role and this information is updated in the database 
 
 
 
 
 ## Links
 
-Application: https://guarded-lowlands-37685.herokuapp.com/notes
+Walkthrough Video: https://drive.google.com/file/d/145454R0z1_dGe_C3tclrM82Dhz0iMmrD/view
 
-Repo: https://github.com/pg1219/HW-Challenge-11-Note-Taker
+Repo: https://github.com/pg1219/HW-Challenge-12-Employee-Tracker
 
 
 ## Mock-Up
 
 Preview image of deployed application
 
-![alt](./hw11mockup.png)
+![alt](./hw12mockup.png)
