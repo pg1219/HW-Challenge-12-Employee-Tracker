@@ -84,7 +84,7 @@ function viewAllRoles() {
 
 function viewAllEmployees() {
   // join function for dept_id 
-  db.query("SELECT employees.id, first_name, last_name, roles.title, manager_id FROM employees Join roles on roles.id=employees.role_id", function (err, results) {
+  db.query("SELECT employees.id, employees.first_name, employees.last_name, roles.title, departments.dept_name, roles.salary, employees.manager_id FROM employees INNER JOIN roles on roles.id=employees.role_id INNER JOIN departments ON departments.id=roles.department_id ORDER BY employees.id", function (err, results) {
     console.table(results);
     if(err) {console.log(err)}
     promptUser();
@@ -239,12 +239,12 @@ function updateEmployee() {
         {
           type: "input",
           name: "first_name",
-          message: "Update the first name of the employee",
+          message: "Update the first name of the employee (first letter case sensitive)",
         },
         {
           type: "input",
           name: "last_name",
-          message: "Update the last name of the employee",
+          message: "Update the last name of the employee (first letter case sensitive)",
         },
         {
           type: "list",
@@ -258,7 +258,7 @@ function updateEmployee() {
           console.log(data);
   
           db.query(
-            "UPDATE employees SET (first_name, last_name, role_id) VALUES (?, ?, ?)",
+            "UPDATE employees SET role_id = ? WHERE first_name = ? AND last_name = ?",
             [data.first_name, data.last_name, data.title],
             function (err, results) {
               if(err) {console.log(err)}
