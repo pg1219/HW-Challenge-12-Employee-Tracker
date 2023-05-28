@@ -75,7 +75,7 @@ function viewAllDepartments() {
 
 function viewAllRoles() {
   // join function for dept_id
-  db.query("SELECT * FROM roles", function (err, results) {
+  db.query("SELECT roles.id, title, salary, dept_name FROM roles JOIN departments ON departments.id = roles.department_id", function (err, results) {
     console.table(results);
     if(err) {console.log(err)}
     promptUser();
@@ -84,7 +84,7 @@ function viewAllRoles() {
 
 function viewAllEmployees() {
   // join function for dept_id 
-  db.query("SELECT * FROM employees", function (err, results) {
+  db.query("SELECT employees.id, first_name, last_name, roles.title, manager_id FROM employees Join roles on roles.id=employees.role_id", function (err, results) {
     console.table(results);
     if(err) {console.log(err)}
     promptUser();
@@ -258,7 +258,7 @@ function updateEmployee() {
           console.log(data);
   
           db.query(
-            "UDPATE employees SET (first_name, last_name, role_id) VALUES (?, ?, ?)",
+            "UPDATE employees SET (first_name, last_name, role_id) VALUES (?, ?, ?)",
             [data.first_name, data.last_name, data.title],
             function (err, results) {
               if(err) {console.log(err)}
