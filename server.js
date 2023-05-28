@@ -37,7 +37,6 @@ function promptUser() {
         ],
       },
     ])
-    //   continue this for all options
     .then(function ({ choices }) {
       switch (choices) {
         case "View all departments":
@@ -74,7 +73,6 @@ function viewAllDepartments() {
 }
 
 function viewAllRoles() {
-  // join function for dept_id
   db.query("SELECT roles.id, title, salary, dept_name FROM roles JOIN departments ON departments.id = roles.department_id", function (err, results) {
     console.table(results);
     if(err) {console.log(err)}
@@ -83,7 +81,6 @@ function viewAllRoles() {
 }
 
 function viewAllEmployees() {
-  // join function for dept_id 
   db.query("SELECT employees.id, employees.first_name, employees.last_name, roles.title, departments.dept_name, roles.salary, employees.manager_id FROM employees INNER JOIN roles on roles.id=employees.role_id INNER JOIN departments ON departments.id=roles.department_id ORDER BY employees.id", function (err, results) {
     console.table(results);
     if(err) {console.log(err)}
@@ -259,7 +256,7 @@ function updateEmployee() {
   
           db.query(
             "UPDATE employees SET role_id = ? WHERE first_name = ? AND last_name = ?",
-            [data.first_name, data.last_name, data.title],
+            [data.title, data.first_name, data.last_name],
             function (err, results) {
               if(err) {console.log(err)}
               console.table(results);
