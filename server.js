@@ -68,149 +68,203 @@ function promptUser() {
 function viewAllDepartments() {
   db.query("SELECT * FROM departments", function (err, results) {
     console.table(results);
-    promptUser()
+    if(err) {console.log(err)}
+    promptUser();
   });
 }
 
 function viewAllRoles() {
-    // join function for dept_id
+  // join function for dept_id
   db.query("SELECT * FROM roles", function (err, results) {
     console.table(results);
-    promptUser()
+    if(err) {console.log(err)}
+    promptUser();
   });
 }
 
 function viewAllEmployees() {
-    // join function for dept_id
+  // join function for dept_id 
   db.query("SELECT * FROM employees", function (err, results) {
     console.table(results);
-    promptUser()
+    if(err) {console.log(err)}
+    promptUser();
   });
 }
 
 function addDepartment() {
-    inquirer.prompt([
-        {
-            type: "input",
-            name: "dept_name",
-            message: "What is the name of the department",
-        },
-        {  
-            type: "input",
-            name: "id",
-            message: "Please add new department ID",
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "dept_name",
+        message: "What is the name of the department",
+      },
+      {
+        type: "input",
+        name: "id",
+        message: "Please add new department ID",
+      },
+    ])
+    .then((data) => {
+      console.log(data);
 
+      db.query(
+        "INSERT INTO departments (id, dept_name) VALUES (?, ?)",
+        [data.id, data.dept_name],
+        function (err, results) {
+          console.table(results);
+          promptUser();
         }
-        ]).then((data) =>{
-            console.log(data)
-
-            db.query(
-                "INSERT INTO departments (id, dept_name) VALUES (?, ?)",
-                [data.id, data.dept_name],
-                function (err, results) {
-                    console.table(results);
-                    promptUser()
-                }
-                );
-            })
-  }
-
-
+      );
+    });
+}
 
 function addRole() {
   db.query("SELECT * FROM departments", function (err, results) {
     console.table(results);
-    const depChoices = results.map(({id, dept_name}) => ({
-        name: dept_name,
-        value: id
-    }))
-    console.log(depChoices)
+    const depChoices = results.map(({ id, dept_name }) => ({
+      name: dept_name,
+      value: id,
+    }));
+    console.log(depChoices);
 
-    inquirer.prompt([
+    inquirer
+      .prompt([
         {
-            type: "input",
-            name: "title",
-            message: "What is the title of the role",
+          type: "input",
+          name: "title",
+          message: "What is the title of the role",
         },
-        {  
-            type: "input",
-            name: "salary",
-            message: "What is the salary of the role",
-
+        {
+          type: "input",
+          name: "salary",
+          message: "What is the salary of the role",
         },
-        {  
-            type: "list",
-            name: "department_id",
-            message: "Which department does the role belong to",
-            choices: depChoices
-        }
-        ]).then((data) =>{
-            console.log(data)
+        {
+          type: "list",
+          name: "department_id",
+          message: "Which department does the role belong to",
+          choices: depChoices,
+        },
+      ])
+      .then((data) => {
+        console.log(data);
 
-            db.query(
-                "INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)",
-                [data.title, data.salary, data.department_id],
-                function (err, results) {
-                    console.table(results);
-                    promptUser()
-                }
-                );
-            })
+        db.query(
+          "INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)",
+          [data.title, data.salary, data.department_id],
+          function (err, results) {
+            if(err) {console.log(err)}
+            console.table(results);
+            promptUser();
+          }
+        );
+      });
   });
 }
 
 function addEmployee() {
-  db.query("SELECT first_name, last_name, id FROM employees", function (err, results) {
-    console.table(results);
-    const empChoices = results.map(({first_name, last_name, id}) => ({
+  db.query(
+    "SELECT first_name, last_name, id FROM employees",
+    function (err, results) {
+      console.table(results);
+      const empChoices = results.map(({ first_name, last_name, id }) => ({
         name: `${first_name} ${last_name}`,
-        value: id
-    }))
-    console.log(empChoices)
+        value: id,
+      }));
+      console.log(empChoices);
 
-  db.query("SELECT title FROM roles", function (err, results) {
-    console.table(results);
-    const roleChoices = results.map(({title}) => ({
-        name: title
-    }))
-    console.log(roleChoices)
+      db.query("SELECT title, id FROM roles", function (err, results) {
+        console.table(results);
+        const roleChoices = results.map(({ title, id }) => ({
+          name: title,
+          value: id
+        }));
+        console.log(roleChoices);
 
-    inquirer.prompt([
-        {
-            type: "input",
-            name: "first name",
-            message: "What is the first name of the employee",
-        },
-        {  
-            type: "input",
-            name: "last name",
-            message: "What is the last name of the employee",
-
-        },
-        {  
-            type: "list",
-            name: "role",
-            message: "What is the role of the employee",
-            choices: roleChoices
-
-        },
-        {  
-            type: "list",
-            name: "manager",
-            message: "Who is the manager of the new employee",
-            choices: empChoices
-        }
-        ]).then((data) =>{
-            console.log(data)
+        inquirer
+          .prompt([
+            {
+              type: "input",
+              name: "first_name",
+              message: "What is the first name of the employee",
+            },
+            {
+              type: "input",
+              name: "last_name",
+              message: "What is the last name of the employee",
+            },
+            {
+              type: "list",
+              name: "role",
+              message: "What is the role of the employee",
+              choices: roleChoices,
+            },
+            {
+              type: "list",
+              name: "manager",
+              message: "Who is the manager of the new employee",
+              choices: empChoices,
+            },
+          ])
+          .then((data) => {
+            console.log(data);
 
             db.query(
-                "INSERT INTO employees (first_name, last_name, title, id) VALUES (?, ?, ?, ?)",
-                [data.first_name, data.last_name, data.title, data.id],
-                function (err, results) {
-                    console.table(results);
-                    promptUser()
-                }
-                );
-            })
-  });
-})}
+              "INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
+              [data.first_name, data.last_name, data.role, data.manager],
+              function (err, results) {
+                if(err) {console.log(err)}
+                console.table(results);
+                promptUser();
+              }
+            );
+          });
+      });
+    }
+  );
+}
+
+function updateEmployee() {
+    db.query("SELECT * FROM roles", function (err, results) {
+      console.table(results);
+      const roleUpdate = results.map(({ id, title }) => ({
+        name: title,
+        value: id
+      }));
+      console.log(roleUpdate);
+
+      inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "first_name",
+          message: "Update the first name of the employee",
+        },
+        {
+          type: "input",
+          name: "last_name",
+          message: "Update the last name of the employee",
+        },
+        {
+          type: "list",
+          name: "title",
+          message: "Update the role of the employee",
+          choices: roleUpdate,
+        },
+        
+        ])
+        .then((data) => {
+          console.log(data);
+  
+          db.query(
+            "UDPATE employees SET (first_name, last_name, role_id) VALUES (?, ?, ?)",
+            [data.first_name, data.last_name, data.title],
+            function (err, results) {
+              if(err) {console.log(err)}
+              console.table(results);
+              promptUser();
+            }
+          );
+        });
+    })}
